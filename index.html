@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0F1419">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Boxing Rounder</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0F1419;
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 设置页 */
+        .setup-page {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #E85D04;
+        }
+        
+        .header p {
+            color: #8BA5A3;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .settings-card {
+            background: #1A1F26;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            border: 1px solid #2A3038;
+        }
+        
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #2A3038;
+        }
+        
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+        
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-adjust {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #E85D04;
+            background: transparent;
+            color: #E85D04;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-adjust:active {
+            background: #E85D04;
+            color: #fff;
+        }
+        
+        .value-display {
+            min-width: 60px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .total-time {
+            text-align: center;
+            padding: 20px;
+            color: #8BA5A3;
+            font-size: 14px;
+        }
+        
+        .total-time span {
+            color: #E85D04;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .start-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #E85D04;
+            background: transparent;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .start-btn:active {
+            background: #E85D04;
+            transform: scale(0.95);
+        }
+        
+        .start-btn svg {
+            width: 50px;
+            height: 50px;
+            fill: #E85D04;
+            margin-left: 5px;
+        }
+        
+        .start-btn:active svg {
+            fill: #fff;
+        }
+        
+        /* 计时页 */
+        .timer-page {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .timer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: #8BA5A3;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .timer-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #E85D04;
+        }
+        
+        .phase-info {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .phase-label {
+            font-size: 14px;
+            color: #8BA5A3;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .round-number {
+            font-size: 18px;
+            color: #fff;
+            margin-top: 5px;
+        }
+        
+        .timer-display {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timer-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 8px solid #2A3038;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .timer-circle.active {
+            border-color: #E85D04;
+            box-shadow: 0 0 30px rgba(232, 93, 4, 0.3);
+        }
+        
+        .timer-circle.rest {
+            border-color: #8BA5A3;
+        }
+        
+        .timer-text {
+            font-size: 72px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: #fff;
+        }
+        
+        .timer-controls {
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #8BA5A3;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .control-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: #8BA5A3;
+        }
+        
+        /* 完成页 */
+        .complete-page {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .complete-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .complete-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #E85D04;
+            margin-bottom: 10px;
+        }
+        
+        .complete-subtitle {
+            font-size: 18px;
+            color: #8BA5A3;
+            margin-bottom: 40px;
+        }
+        
+        .home-btn {
+            padding: 15px 40px;
+            border-radius: 30px;
+            border: 2px solid #E85D04;
+            background: transparent;
+            color: #E85D04;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .home-btn:active {
+            background: #E85D04;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- 设置页 -->
+    <div class="setup-page" id="setupPage">
+        <div class="header">
+            <h1>BOXING ROUNDER</h1>
+            <p>专业拳击计时器</p>
+        </div>
+        
+        <div class="settings-card">
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="icon">🥊</span>
+                    <span>回合时长</span>
+                </div>
+                <div class="setting-control">
+                    <button class="btn-adjust" onclick="adjustTime('round', -10)">−</button>
+                    <span class="value-display" id="roundTime">3:00</span>
+                    <button class="btn-adjust" onclick="adjustTime('round', 10)">+</button>
+                </div>
+            </div>
+            
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="icon">⏳</span>
+                    <span>休息时间</span>
+                </div>
+                <div class="setting-control">
+                    <button class="btn-adjust" onclick="adjustTime('rest', -10)">−</button>
+                    <span class="value-display" id="restTime">1:00</span>
+                    <button class="btn-adjust" onclick="adjustTime('rest', 10)">+</button>
+                </div>
+            </div>
+            
+            <div class="setting-row">
+                <div class="setting-label">
+                    <span class="icon">🔄</span>
+                    <span>回合数</span>
+                </div>
+                <div class="setting-control">
+                    <button class="btn-adjust" onclick="adjustRounds(-1)">−</button>
+                    <span class="value-display" id="roundCount">15</span>
+                    <button class="btn-adjust" onclick="adjustRounds(1)">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="total-time">
+            总训练时长: <span id="totalTime">45:00</span>
+        </div>
+        
+        <button class="start-btn" onclick="startWorkout()">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+    </div>
+    
+    <!-- 计时页 -->
+    <div class="timer-page" id="timerPage">
+        <div class="timer-header">
+            <button class="back-btn" onclick="stopWorkout()">←</button>
+            <span class="timer-title">FIGHT</span>
+            <div style="width: 40px;"></div>
+        </div>
+        
+        <div class="phase-info">
+            <div class="phase-label" id="phaseLabel">GET READY</div>
+            <div class="round-number" id="roundDisplay">1 / 15</div>
+        </div>
+        
+        <div class="timer-display">
+            <div class="timer-circle" id="timerCircle">
+                <div class="timer-text" id="timerText">04</div>
+            </div>
+        </div>
+        
+        <div class="timer-controls">
+            <button class="control-btn" id="pauseBtn" onclick="togglePause()">
+                <svg id="pauseIcon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                <svg id="playIcon" style="display: none;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 完成页 -->
+    <div class="complete-page" id="completePage">
+        <div class="complete-icon">👏</div>
+        <div class="complete-title">Workout Complete!</div>
+        <div class="complete-subtitle">Great job!</div>
+        <button class="home-btn" onclick="goHome()">返回首页</button>
+    </div>
+
+    <script>
+        // 配置
+        let config = {
+            roundTime: 180,    // 3分钟
+            restTime: 60,      // 1分钟
+            rounds: 15,
+            prepTime: 4        // 准备时间4秒
+        };
+        
+        // 状态
+        let state = {
+            currentRound: 1,
+            currentPhase: 'prep', // prep, round, rest, done
+            timeLeft: 4,
+            isPaused: false,
+            timer: null,
+            audioContext: null
+        };
+        
+        // 初始化音频上下文（用户交互后）
+        function initAudio() {
+            if (!state.audioContext) {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // 音效生成函数
+        function playBeep() {
+            if (!state.audioContext) return;
+            const osc = state.audioContext.createOscillator();
+            const gain = state.audioContext.createGain();
+            osc.type = 'square';
+            osc.frequency.value = 800;
+            gain.gain.value = 0.3;
+            osc.connect(gain);
+            gain.connect(state.audioContext.destination);
+            osc.start();
+            osc.stop(state.audioContext.currentTime + 0.1);
+        }
+        
+        function playStartBell() {
+            if (!state.audioContext) return;
+            const osc = state.audioContext.createOscillator();
+            const gain = state.audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 523.25; // C5
+            gain.gain.setValueAtTime(0.5, state.audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, state.audioContext.currentTime + 1.5);
+            osc.connect(gain);
+            gain.connect(state.audioContext.destination);
+            osc.start();
+            osc.stop(state.audioContext.currentTime + 1.5);
+        }
+        
+        function playWoodBlock() {
+            if (!state.audioContext) return;
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const osc = state.audioContext.createOscillator();
+                    const gain = state.audioContext.createGain();
+                    const filter = state.audioContext.createBiquadFilter();
+                    osc.type = 'square';
+                    osc.frequency.value = 800;
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 1000;
+                    gain.gain.value = 0.4;
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(state.audioContext.destination);
+                    osc.start();
+                    osc.stop(state.audioContext.currentTime + 0.08);
+                }, i * 200);
+            }
+        }
+        
+        function playEndBell() {
+            if (!state.audioContext) return;
+            for (let i = 0; i < 2; i++) {
+                setTimeout(() => {
+                    const osc = state.audioContext.createOscillator();
+                    const gain = state.audioContext.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = 440; // A4
+                    gain.gain.setValueAtTime(0.5, state.audioContext.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, state.audioContext.currentTime + 1);
+                    osc.connect(gain);
+                    gain.connect(state.audioContext.destination);
+                    osc.start();
+                    osc.stop(state.audioContext.currentTime + 1);
+                }, i * 300);
+            }
+        }
+        
+        function playClap() {
+            if (!state.audioContext) return;
+            const bufferSize = state.audioContext.sampleRate * 2;
+            const buffer = state.audioContext.createBuffer(1, bufferSize, state.audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const noise = state.audioContext.createBufferSource();
+                    const filter = state.audioContext.createBiquadFilter();
+                    const gain = state.audioContext.createGain();
+                    noise.buffer = buffer;
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 2000 + Math.random() * 1000;
+                    filter.Q.value = 1;
+                    gain.gain.setValueAtTime(0.3, state.audioContext.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, state.audioContext.currentTime + 0.1);
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(state.audioContext.destination);
+                    noise.start();
+                    noise.stop(state.audioContext.currentTime + 0.1);
+                }, i * 60 + Math.random() * 30);
+            }
+        }
+        
+        // UI更新函数
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function updateDisplay() {
+            document.getElementById('roundTime').textContent = formatTime(config.roundTime);
+            document.getElementById('restTime').textContent = formatTime(config.restTime);
+            document.getElementById('roundCount').textContent = config.rounds;
+            
+            const total = (config.roundTime + config.restTime) * config.rounds - config.restTime;
+            document.getElementById('totalTime').textContent = formatTime(total);
+        }
+        
+        function adjustTime(type, delta) {
+            const key = type + 'Time';
+            const newValue = config[key] + delta;
+            if (newValue >= 10 && newValue <= 600) {
+                config[key] = newValue;
+                updateDisplay();
+            }
+        }
+        
+        function adjustRounds(delta) {
+            const newValue = config.rounds + delta;
+            if (newValue >= 1 && newValue <= 50) {
+                config.rounds = newValue;
+                updateDisplay();
+            }
+        }
+        
+        // 计时控制
+        function startWorkout() {
+            initAudio();
+            state.currentRound = 1;
+            state.currentPhase = 'prep';
+            state.timeLeft = config.prepTime;
+            state.isPaused = false;
+            
+            document.getElementById('setupPage').style.display = 'none';
+            document.getElementById('timerPage').style.display = 'flex';
+            document.getElementById('completePage').style.display = 'none';
+            
+            updateTimerUI();
+            startTimer();
+        }
+        
+        function startTimer() {
+            if (state.timer) clearInterval(state.timer);
+            
+            state.timer = setInterval(() => {
+                if (state.isPaused) return;
+                
+                // 准备阶段最后4秒滴滴声
+                if (state.currentPhase === 'prep' && state.timeLeft <= 4 && state.timeLeft > 0) {
+                    playBeep();
+                }
+                
+                // 回合最后10秒木梆子
+                if (state.currentPhase === 'round' && state.timeLeft === 10) {
+                    playWoodBlock();
+                }
+                
+                // 休息最后4秒滴滴声
+                if (state.currentPhase === 'rest' && state.timeLeft <= 4 && state.timeLeft > 0) {
+                    playBeep();
+                }
+                
+                state.timeLeft--;
+                
+                if (state.timeLeft < 0) {
+                    nextPhase();
+                } else {
+                    updateTimerUI();
+                }
+            }, 1000);
+        }
+        
+        function nextPhase() {
+            if (state.currentPhase === 'prep') {
+                // 准备结束，开始回合
+                state.currentPhase = 'round';
+                state.timeLeft = config.roundTime;
+                playStartBell();
+            } else if (state.currentPhase === 'round') {
+                // 回合结束，开始休息或完成
+                playEndBell();
+                if (state.currentRound >= config.rounds) {
+                    finishWorkout();
+                    return;
+                }
+                state.currentPhase = 'rest';
+                state.timeLeft = config.restTime;
+            } else if (state.currentPhase === 'rest') {
+                // 休息结束，下一回合准备
+                state.currentRound++;
+                state.currentPhase = 'prep';
+                state.timeLeft = config.prepTime;
+            }
+            updateTimerUI();
+        }
+        
+        function updateTimerUI() {
+            const phaseLabels = {
+                'prep': 'GET READY',
+                'round': 'ROUND',
+                'rest': 'REST'
+            };
+            
+            document.getElementById('phaseLabel').textContent = phaseLabels[state.currentPhase];
+            document.getElementById('roundDisplay').textContent = 
+                state.currentPhase === 'prep' && state.currentRound === 1 ? 
+                `1 / ${config.rounds}` : 
+                `${state.currentRound} / ${config.rounds}`;
+            
+            document.getElementById('timerText').textContent = 
+                state.timeLeft < 10 ? `0${state.timeLeft}` : state.timeLeft;
+            
+            const circle = document.getElementById('timerCircle');
+            circle.className = 'timer-circle';
+            if (state.currentPhase === 'round') circle.classList.add('active');
+            if (state.currentPhase === 'rest') circle.classList.add('rest');
+        }
+        
+        function togglePause() {
+            state.isPaused = !state.isPaused;
+            document.getElementById('pauseIcon').style.display = state.isPaused ? 'none' : 'block';
+            document.getElementById('playIcon').style.display = state.isPaused ? 'block' : 'none';
+        }
+        
+        function stopWorkout() {
+            if (state.timer) clearInterval(state.timer);
+            document.getElementById('timerPage').style.display = 'none';
+            document.getElementById('setupPage').style.display = 'flex';
+        }
+        
+        function finishWorkout() {
+            if (state.timer) clearInterval(state.timer);
+            playEndBell();
+            setTimeout(playClap, 1000);
+            
+            document.getElementById('timerPage').style.display = 'none';
+            document.getElementById('completePage').style.display = 'flex';
+        }
+        
+        function goHome() {
+            document.getElementById('completePage').style.display = 'none';
+            document.getElementById('setupPage').style.display = 'flex';
+        }
+        
+        // 初始化
+        updateDisplay();
+        
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW registered'))
+                .catch(err => console.log('SW error:', err));
+        }
+        
+        // 屏幕常亮
+        if ('wakeLock' in navigator) {
+            navigator.wakeLock.request('screen').catch(() => {});
+        }
+    </script>
+</body>
+</html>
