@@ -10,16 +10,18 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         
         :root {
             --bg-primary: #1A1A1A;
             --bg-secondary: #2a2a2a;
             --accent-orange: #E85D04;
-            --accent-gold: #daa520;
+            --accent-green: #8BA5A3;
             --text-primary: #ffffff;
             --text-secondary: #8BA5A3;
-            --border-color: #8BA5A3;
+            --card-bg: #8BA5A3;
         }
         
         body {
@@ -31,237 +33,272 @@
             flex-direction: column;
         }
         
-        .header {
-            background: var(--bg-primary);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-orange);
-        }
-        
-        .header h1 {
-            color: var(--accent-orange);
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .header p {
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-        
         .page {
             display: none;
             flex: 1;
             flex-direction: column;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            width: 100%;
         }
         
         .page.active {
             display: flex;
         }
         
+        /* 统一顶部标题 */
+        .top-header {
+            text-align: center;
+            padding: 15px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        /* 统一主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 统一卡片样式 */
+        .timer-card, .settings-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
         .settings-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
+            align-items: stretch;
+        }
+        
+        /* 回合数 */
+        .round-info, .settings-title {
+            color: #1A1A1A;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* 大时间显示 */
+        .main-timer {
+            font-size: 72px;
+            font-weight: bold;
+            color: #1A1A1A;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
             margin-bottom: 15px;
         }
         
-        .setting-item {
+        /* 状态标签 */
+        .status-label {
+            color: #1A1A1A;
+            font-size: 20px;
+            font-weight: 600;
             margin-bottom: 20px;
         }
         
-        .setting-label {
+        /* 进度条 */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(26, 26, 26, 0.2);
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-orange);
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+        
+        /* 底部信息区 */
+        .info-row {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
         }
         
-        .setting-value {
-            color: var(--accent-orange);
-            font-size: 24px;
-            font-weight: bold;
+        .info-item {
             text-align: center;
-            margin: 10px 0;
         }
         
-        .slider-container {
+        .info-label {
+            color: rgba(26, 26, 26, 0.7);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #1A1A1A;
+            font-size: 24px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* 设置行 */
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+        }
+        
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-name {
+            color: #1A1A1A;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .setting-control {
             display: flex;
             align-items: center;
             gap: 15px;
         }
         
-        .slider-btn {
-            width: 40px;
-            height: 40px;
+        .setting-btn {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 2px solid var(--accent-orange);
+            border: 2px solid #1A1A1A;
             background: transparent;
-            color: var(--accent-orange);
-            font-size: 20px;
+            color: #1A1A1A;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
         }
         
-        .slider-btn:hover {
-            background: var(--accent-orange);
-            color: white;
+        .setting-btn:active {
+            background: rgba(26, 26, 26, 0.2);
         }
         
-        input[type="range"] {
-            flex: 1;
-            height: 8px;
-            background: var(--bg-primary);
-            border-radius: 4px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--accent-orange);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        .total-time {
+        .setting-value {
+            color: #1A1A1A;
+            font-size: 20px;
+            font-weight: bold;
+            min-width: 60px;
             text-align: center;
+        }
+        
+        /* 控制按钮区 */
+        .controls-area {
             padding: 20px;
-            background: linear-gradient(135deg, rgba(232, 93, 4, 0.1) 0%, rgba(232, 93, 4, 0.05) 100%);
-            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
             margin-bottom: 20px;
         }
         
-        .total-time-label {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-        
-        .total-time-value {
-            color: var(--accent-orange);
-            font-size: 32px;
-            font-weight: bold;
-        }
-        
-        .start-btn {
-            width: 120px;
-            height: 120px;
+        .control-btn-large {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            border: 4px solid var(--accent-orange);
-            background: transparent;
-            color: var(--accent-orange);
-            font-size: 48px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 28px;
             cursor: pointer;
-            margin: 20px auto;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
         }
         
-        .start-btn:hover {
+        .control-btn-large:active {
+            transform: scale(0.95);
+        }
+        
+        .control-btn-large.stop-btn {
+            background: #c0392b;
+        }
+        
+        .control-btn-large.stop-btn.holding {
+            animation: hold-pulse 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes hold-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+            50% { transform: scale(0.95); box-shadow: 0 0 20px 10px rgba(192, 57, 43, 0); }
+        }
+        
+        /* 长按提示 */
+        .hold-hint {
+            position: absolute;
+            bottom: -25px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid rgba(139, 165, 163, 0.2);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: var(--accent-orange);
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        /* 开始按钮 */
+        .start-workout-btn {
             background: var(--accent-orange);
             color: white;
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(232, 93, 4, 0.5);
+            border: none;
+            padding: 18px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .timer-display {
+        .start-workout-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* 完成页 */
+        .complete-card {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-        
-        .phase-indicator {
-            color: var(--accent-gold);
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .round-indicator {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        
-        .timer-circle {
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            border: 4px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: radial-gradient(circle, rgba(139, 165, 163, 0.1) 0%, transparent 70%);
-        }
-        
-        .timer-circle.fight {
-            border-color: var(--accent-orange);
-            box-shadow: 0 0 40px rgba(232, 93, 4, 0.3);
-        }
-        
-        .timer-circle.rest {
-            border-color: #2ecc71;
-        }
-        
-        .timer-circle.prepare {
-            border-color: #f39c12;
-            animation: pulse 1s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        
-        .timer-text {
-            font-size: 64px;
-            font-weight: bold;
-            color: var(--text-primary);
-            font-variant-numeric: tabular-nums;
-        }
-        
-        .controls-row {
-            display: flex;
-            gap: 20px;
-            margin-top: 40px;
-        }
-        
-        .control-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid var(--text-secondary);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .control-btn:hover {
-            border-color: var(--accent-orange);
-            color: var(--accent-orange);
-        }
-        
-        .complete-page {
-            text-align: center;
-            justify-content: center;
+            padding: 40px;
         }
         
         .complete-icon {
@@ -270,136 +307,140 @@
         }
         
         .complete-title {
-            color: var(--accent-orange);
-            font-size: 32px;
+            color: #1A1A1A;
+            font-size: 28px;
             margin-bottom: 10px;
+            font-weight: bold;
         }
         
-        .complete-message {
-            color: var(--text-secondary);
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-        
-        .back-btn {
-            background: var(--accent-orange);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
+        .complete-stats {
+            color: rgba(26, 26, 26, 0.7);
             font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .back-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.4);
-        }
-        
-        .back-arrow {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 10px;
-        }
-        
-        .timer-header {
-            position: relative;
-            text-align: center;
-            padding: 20px;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
-    <!-- 设置页 -->
-    <div id="settingsPage" class="page active">
-        <div class="header">
-            <h1>Boxing Rounder</h1>
-            <p>专业拳击计时器</p>
-        </div>
+    <!-- 计时页面 -->
+    <div id="timerPage" class="page active">
+        <div class="top-header" id="pageTitle">锻炼开始</div>
         
-        <div class="total-time">
-            <div class="total-time-label">总训练时长</div>
-            <div class="total-time-value" id="totalTime">45:00</div>
-        </div>
-        
-        <div class="settings-card">
-            <div class="setting-item">
-                <div class="setting-label">
-                    <span>⏱️</span>
-                    <span>回合时长</span>
+        <div class="main-content">
+            <div class="timer-card">
+                <div class="round-info" id="roundDisplay">回合数: 1/15</div>
+                <div class="main-timer" id="mainTimer">03:00</div>
+                <div class="status-label" id="statusLabel">状态: 准备</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
                 </div>
-                <div class="setting-value" id="roundTimeValue">3:00</div>
-                <div class="slider-container">
-                    <button class="slider-btn" onclick="adjustTime('round', -10)">-</button>
-                    <input type="range" id="roundSlider" min="10" max="600" value="180" oninput="updateSettings()">
-                    <button class="slider-btn" onclick="adjustTime('round', 10)">+</button>
-                </div>
-            </div>
-            
-            <div class="setting-item">
-                <div class="setting-label">
-                    <span>⏸️</span>
-                    <span>休息时间</span>
-                </div>
-                <div class="setting-value" id="restTimeValue">1:00</div>
-                <div class="slider-container">
-                    <button class="slider-btn" onclick="adjustTime('rest', -10)">-</button>
-                    <input type="range" id="restSlider" min="10" max="300" value="60" oninput="updateSettings()">
-                    <button class="slider-btn" onclick="adjustTime('rest', 10)">+</button>
-                </div>
-            </div>
-            
-            <div class="setting-item">
-                <div class="setting-label">
-                    <span>🔢</span>
-                    <span>回合数</span>
-                </div>
-                <div class="setting-value" id="roundsValue">15</div>
-                <div class="slider-container">
-                    <button class="slider-btn" onclick="adjustRounds(-1)">-</button>
-                    <input type="range" id="roundsSlider" min="1" max="30" value="15" oninput="updateSettings()">
-                    <button class="slider-btn" onclick="adjustRounds(1)">+</button>
+                
+                <div class="info-row">
+                    <div class="info-item">
+                        <div class="info-label">训练时间</div>
+                        <div class="info-value" id="roundTimeDisplay">03:00</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">休息时间</div>
+                        <div class="info-value" id="restTimeDisplay">01:00</div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <button class="start-btn" onclick="startWorkout()">▶</button>
-    </div>
-
-    <!-- 计时运行页 -->
-    <div id="timerPage" class="page">
-        <div class="timer-header">
-            <button class="back-arrow" onclick="stopWorkout()">←</button>
-            <h2 id="timerTitle">Fight</h2>
+        <div class="controls-area">
+            <button class="control-btn-large" id="pauseBtn" onclick="togglePause()">⏸</button>
+            <button class="control-btn-large stop-btn" id="stopBtn" ontouchstart="startHoldStop()" ontouchend="endHoldStop()" onmousedown="startHoldStop()" onmouseup="endHoldStop()" onmouseleave="endHoldStop()">
+                ⏹
+                <span class="hold-hint">长按结束</span>
+            </button>
+            <button class="control-btn-large" onclick="resetWorkout()">↻</button>
         </div>
         
-        <div class="timer-display">
-            <div class="phase-indicator" id="phaseText">GET READY</div>
-            <div class="round-indicator" id="roundText">1 / 15</div>
-            
-            <div class="timer-circle prepare" id="timerCircle">
-                <div class="timer-text" id="timerDisplay">3</div>
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchToTimer()">
+                <span class="nav-icon">⏱</span>
+                <span>计时</span>
             </div>
-            
-            <div class="controls-row">
-                <button class="control-btn" id="pauseBtn" onclick="togglePause()">⏸</button>
+            <div class="nav-item" onclick="switchToSettings()">
+                <span class="nav-icon">⚙</span>
+                <span>设置</span>
             </div>
         </div>
     </div>
 
-    <!-- 完成页 -->
-    <div id="completePage" class="page complete-page">
-        <div class="complete-icon">🏆</div>
-        <div class="complete-title">Workout Complete!</div>
-        <div class="complete-message">Great job! 👏</div>
-        <button class="back-btn" onclick="backToSettings()">返回首页</button>
+    <!-- 设置页面 -->
+    <div id="settingsPage" class="page">
+        <div class="top-header">训练设置</div>
+        
+        <div class="main-content">
+            <div class="settings-card">
+                <div class="settings-title">训练参数</div>
+                
+                <div class="setting-row">
+                    <span class="setting-name">回合时长</span>
+                    <div class="setting-control">
+                        <button class="setting-btn" onclick="adjustSetting('round', -10)">-</button>
+                        <span class="setting-value" id="settingRound">03:00</span>
+                        <button class="setting-btn" onclick="adjustSetting('round', 10)">+</button>
+                    </div>
+                </div>
+                
+                <div class="setting-row">
+                    <span class="setting-name">休息时间</span>
+                    <div class="setting-control">
+                        <button class="setting-btn" onclick="adjustSetting('rest', -10)">-</button>
+                        <span class="setting-value" id="settingRest">01:00</span>
+                        <button class="setting-btn" onclick="adjustSetting('rest', 10)">+</button>
+                    </div>
+                </div>
+                
+                <div class="setting-row">
+                    <span class="setting-name">回合数</span>
+                    <div class="setting-control">
+                        <button class="setting-btn" onclick="adjustSetting('rounds', -1)">-</button>
+                        <span class="setting-value" id="settingRounds">15</span>
+                        <button class="setting-btn" onclick="adjustSetting('rounds', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="start-workout-btn" onclick="startFromSettings()">开始训练</button>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="switchToTimer()">
+                <span class="nav-icon">⏱</span>
+                <span>计时</span>
+            </div>
+            <div class="nav-item active" onclick="switchToSettings()">
+                <span class="nav-icon">⚙</span>
+                <span>设置</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完成页面 -->
+    <div id="completePage" class="page">
+        <div class="main-content">
+            <div class="timer-card" style="margin-top: auto; margin-bottom: auto;">
+                <div class="complete-icon">🏆</div>
+                <div class="complete-title">训练完成!</div>
+                <div class="complete-stats" id="completeStats">共完成 15 回合</div>
+                <button class="start-workout-btn" onclick="backToSettings()" style="margin-top: 30px;">返回设置</button>
+            </div>
+        </div>
+        
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="switchToTimer()">
+                <span class="nav-icon">⏱</span>
+                <span>计时</span>
+            </div>
+            <div class="nav-item" onclick="switchToSettings()">
+                <span class="nav-icon">⚙</span>
+                <span>设置</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -412,28 +453,24 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        // 1. 华为Petal倒计时：3声，1秒1声（2000Hz，50ms）
+        // 1. 华为Petal倒计时（3声，1秒1声）
         function playCountdown3() {
             if (!audioCtx) return;
             const t = audioCtx.currentTime;
             
-            // 3声，间隔1秒
             for (let i = 0; i < 3; i++) {
                 const startTime = t + i * 1.0;
                 
-                // 基频 2000Hz
                 const osc1 = audioCtx.createOscillator();
                 const gain1 = audioCtx.createGain();
                 osc1.type = 'sine';
                 osc1.frequency.value = 2000;
                 
-                // ASR包络：10ms攻击 → 30ms保持 → 10ms衰减
                 gain1.gain.setValueAtTime(0, startTime);
                 gain1.gain.linearRampToValueAtTime(0.46, startTime + 0.01);
                 gain1.gain.setValueAtTime(0.46, startTime + 0.04);
                 gain1.gain.linearRampToValueAtTime(0, startTime + 0.05);
                 
-                // 谐波 4000Hz (5%)
                 const osc2 = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc2.type = 'sine';
@@ -456,13 +493,115 @@
             }
         }
 
-        // 2. 手掌锣开场铃：1声（400Hz，3秒）
+        // 2. 板儿鼓：10秒倒计时（3声，京剧单皮鼓风格）- 精确移植
+        function playBanGu() {
+            if (!audioCtx) return;
+            const t = audioCtx.currentTime;
+            
+            // 板儿鼓参数（来自参考代码）
+            const pitch = 1100;      // 基频
+            const crack = 85;        // 木质感
+            const decayMs = 18;      // 余音
+            const vel = 0.8;         // 力度
+            
+            const gain = vel;
+            const decaySec = decayMs / 1000;
+            const crackFactor = crack / 100;
+            
+            // 3声，间隔250ms
+            for (let i = 0; i < 3; i++) {
+                const startTime = t + i * 0.25;
+                
+                // ── Layer 1: 主体共鸣 ─────────────────────────
+                const dur = decaySec * 3;
+                const bufLen = Math.ceil(audioCtx.sampleRate * dur);
+                const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+                const d = buf.getChannelData(0);
+                
+                const f0 = pitch;
+                const f1 = pitch * 2.73;   // 非谐波泛音 - 木质特征
+                const f2 = pitch * 5.12;   // 高频泛音
+                const f3 = pitch * 8.4;    // 极高频瞬态
+                
+                for (let j = 0; j < bufLen; j++) {
+                    const tt = j / audioCtx.sampleRate;
+                    
+                    // 快衰减包络
+                    const body = Math.exp(-tt / decaySec);
+                    const click = Math.exp(-tt * 400);         // ~2ms点击
+                    const crackEnv = Math.exp(-tt * 150) * crackFactor; // ~7ms破裂声
+                    
+                    const sig =
+                        Math.sin(2 * Math.PI * f0 * tt) * body * 0.6 +
+                        Math.sin(2 * Math.PI * f1 * tt) * body * 0.35 * crackFactor +
+                        Math.sin(2 * Math.PI * f2 * tt) * crackEnv * 0.25 +
+                        Math.sin(2 * Math.PI * f3 * tt) * click * 0.15 * crackFactor +
+                        (Math.random() * 2 - 1) * click * 0.4 * crackFactor; // 噪声爆发
+                    
+                    d[j] = sig * gain;
+                }
+                
+                const src = audioCtx.createBufferSource();
+                src.buffer = buf;
+                
+                // 带通滤波 - 聚焦木质共振
+                const bp = audioCtx.createBiquadFilter();
+                bp.type = 'bandpass';
+                bp.frequency.value = pitch * 1.1;
+                bp.Q.value = 1.8 + crackFactor * 2;
+                
+                // 高频增强
+                const hi = audioCtx.createBiquadFilter();
+                hi.type = 'highshelf';
+                hi.frequency.value = pitch * 2;
+                hi.gain.value = 5 + crackFactor * 4;
+                
+                // 低频切除
+                const lo = audioCtx.createBiquadFilter();
+                lo.type = 'highpass';
+                lo.frequency.value = pitch * 0.4;
+                
+                const masterGain = audioCtx.createGain();
+                masterGain.gain.value = 1.2;
+                
+                src.connect(lo); lo.connect(bp); bp.connect(hi); hi.connect(masterGain);
+                masterGain.connect(audioCtx.destination);
+                src.start(startTime);
+                
+                // ── Layer 2: 鼓槌敲击 ─────────────────────────
+                const stickLen = Math.ceil(audioCtx.sampleRate * 0.015);
+                const stickBuf = audioCtx.createBuffer(1, stickLen, audioCtx.sampleRate);
+                const sd = stickBuf.getChannelData(0);
+                const stickFreq = pitch * 3.5;
+                
+                for (let j = 0; j < stickLen; j++) {
+                    const tt = j / audioCtx.sampleRate;
+                    sd[j] = (
+                        Math.sin(2 * Math.PI * stickFreq * tt) +
+                        (Math.random() * 2 - 1) * 0.6
+                    ) * Math.exp(-tt * 600) * gain * crackFactor * 0.7;
+                }
+                
+                const stickSrc = audioCtx.createBufferSource();
+                stickSrc.buffer = stickBuf;
+                const stickHi = audioCtx.createBiquadFilter();
+                stickHi.type = 'highpass';
+                stickHi.frequency.value = 2000;
+                const stickGain = audioCtx.createGain();
+                stickGain.gain.value = 0.8;
+                
+                stickSrc.connect(stickHi); stickHi.connect(stickGain); stickGain.connect(audioCtx.destination);
+                stickSrc.start(startTime);
+            }
+        }
+
+        // 3. 手掌锣开场铃：1声
         function playOpeningGong() {
             if (!audioCtx) return;
             createGongSound(400, 3.0, audioCtx.currentTime);
         }
 
-        // 3. 手掌锣结束铃：2声（400Hz，3秒，间隔300ms）
+        // 4. 手掌锣结束铃：2声
         function playEndGong() {
             if (!audioCtx) return;
             const now = audioCtx.currentTime;
@@ -470,7 +609,7 @@
             createGongSound(400, 3.0, now + 0.3);
         }
 
-        // 手掌锣合成核心
+        // 手掌锣合成
         function createGongSound(baseFreq, duration, startTime) {
             const t = startTime || audioCtx.currentTime;
             const brightness = 0.8;
@@ -507,7 +646,6 @@
                 osc.stop(t + duration);
             });
             
-            // 低频嗡声
             const humOsc = audioCtx.createOscillator();
             const humGain = audioCtx.createGain();
             humOsc.type = 'sine';
@@ -520,7 +658,6 @@
             humOsc.start(t);
             humOsc.stop(t + duration);
             
-            // 颤音
             const lfo = audioCtx.createOscillator();
             const lfoGain = audioCtx.createGain();
             lfo.frequency.value = 10;
@@ -530,7 +667,6 @@
             lfo.start(t);
             lfo.stop(t + duration * 0.5);
             
-            // 打击噪声
             const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.1, audioCtx.sampleRate);
             const noiseData = noiseBuffer.getChannelData(0);
             for (let i = 0; i < noiseData.length; i++) {
@@ -558,63 +694,145 @@
             phase: 'prepare',
             timeLeft: 3,
             isPaused: false,
-            intervalId: null
+            wasPausedBeforeSettings: false,
+            intervalId: null,
+            totalTime: 0
         };
+
+        let holdStopTimer = null;
+        const HOLD_DURATION = 800; // 长按800ms触发
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function updateSettings() {
-            settings.roundTime = parseInt(document.getElementById('roundSlider').value);
-            settings.restTime = parseInt(document.getElementById('restSlider').value);
-            settings.rounds = parseInt(document.getElementById('roundsSlider').value);
+        function updateDisplay() {
+            document.getElementById('roundDisplay').textContent = `回合数: ${timerState.currentRound}/${settings.rounds}`;
+            document.getElementById('mainTimer').textContent = formatTime(timerState.timeLeft);
+            document.getElementById('roundTimeDisplay').textContent = formatTime(settings.roundTime);
+            document.getElementById('restTimeDisplay').textContent = formatTime(settings.restTime);
             
-            document.getElementById('roundTimeValue').textContent = formatTime(settings.roundTime);
-            document.getElementById('restTimeValue').textContent = formatTime(settings.restTime);
-            document.getElementById('roundsValue').textContent = settings.rounds;
+            let progress = 0;
+            if (timerState.phase === 'round') {
+                progress = ((settings.roundTime - timerState.timeLeft) / settings.roundTime) * 100;
+            } else if (timerState.phase === 'rest') {
+                progress = ((settings.restTime - timerState.timeLeft) / settings.restTime) * 100;
+            } else if (timerState.phase === 'prepare') {
+                progress = ((3 - timerState.timeLeft) / 3) * 100;
+            }
+            document.getElementById('progressBar').style.width = progress + '%';
             
-            const total = (settings.roundTime + settings.restTime) * settings.rounds - settings.restTime;
-            document.getElementById('totalTime').textContent = formatTime(total);
+            const statusMap = {
+                prepare: '准备',
+                round: '训练',
+                rest: '休息'
+            };
+            document.getElementById('statusLabel').textContent = `状态: ${statusMap[timerState.phase]}`;
         }
 
-        function adjustTime(type, delta) {
-            const slider = document.getElementById(type + 'Slider');
-            let newValue = parseInt(slider.value) + delta;
-            newValue = Math.max(parseInt(slider.min), Math.min(parseInt(slider.max), newValue));
-            slider.value = newValue;
-            updateSettings();
+        function updateSettingsDisplay() {
+            document.getElementById('settingRound').textContent = formatTime(settings.roundTime);
+            document.getElementById('settingRest').textContent = formatTime(settings.restTime);
+            document.getElementById('settingRounds').textContent = settings.rounds;
         }
 
-        function adjustRounds(delta) {
-            const slider = document.getElementById('roundsSlider');
-            let newValue = parseInt(slider.value) + delta;
-            newValue = Math.max(parseInt(slider.min), Math.min(parseInt(slider.max), newValue));
-            slider.value = newValue;
-            updateSettings();
+        // ==================== 页面切换（关键：设置页暂停） ====================
+        function switchToTimer() {
+            document.getElementById('settingsPage').classList.remove('active');
+            document.getElementById('timerPage').classList.add('active');
+            
+            // 从设置页返回，恢复计时
+            if (timerState.wasPausedBeforeSettings) {
+                timerState.isPaused = false;
+                timerState.wasPausedBeforeSettings = false;
+                document.getElementById('pauseBtn').textContent = '⏸';
+            }
+            
+            updateNavActive(0);
         }
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+        function switchToSettings() {
+            // 进入设置页，暂停计时
+            if (!timerState.isPaused && timerState.intervalId) {
+                timerState.wasPausedBeforeSettings = true;
+                timerState.isPaused = true;
+                document.getElementById('pauseBtn').textContent = '▶';
+            }
+            
+            document.getElementById('timerPage').classList.remove('active');
+            document.getElementById('completePage').classList.remove('active');
+            document.getElementById('settingsPage').classList.add('active');
+            updateNavActive(1);
         }
 
+        function updateNavActive(index) {
+            document.querySelectorAll('.nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        }
+
+        // ==================== 长按停止逻辑 ====================
+        function startHoldStop() {
+            const btn = document.getElementById('stopBtn');
+            btn.classList.add('holding');
+            
+            holdStopTimer = setTimeout(() => {
+                // 长按触发：结束训练
+                stopAndReset();
+                btn.classList.remove('holding');
+            }, HOLD_DURATION);
+        }
+
+        function endHoldStop() {
+            const btn = document.getElementById('stopBtn');
+            btn.classList.remove('holding');
+            
+            if (holdStopTimer) {
+                clearTimeout(holdStopTimer);
+                holdStopTimer = null;
+            }
+        }
+
+        function stopAndReset() {
+            if (timerState.intervalId) {
+                clearInterval(timerState.intervalId);
+                timerState.intervalId = null;
+            }
+            
+            // 重置状态
+            timerState.currentRound = 1;
+            timerState.phase = 'prepare';
+            timerState.timeLeft = 3;
+            timerState.isPaused = false;
+            timerState.wasPausedBeforeSettings = false;
+            timerState.totalTime = 0;
+            
+            document.getElementById('pauseBtn').textContent = '⏸';
+            
+            // 切换到设置页
+            switchToSettings();
+        }
+
+        // ==================== 训练控制 ====================
         function startWorkout() {
             initAudio();
             timerState.currentRound = 1;
             timerState.phase = 'prepare';
             timerState.timeLeft = 3;
             timerState.isPaused = false;
+            timerState.wasPausedBeforeSettings = false;
+            timerState.totalTime = 0;
             
-            showPage('timerPage');
-            updateTimerDisplay();
-            
-            // 准备阶段开始播放3声倒计时
             playCountdown3();
-            
             startTimer();
+            updateDisplay();
+        }
+
+        function startFromSettings() {
+            switchToTimer();
+            startWorkout();
         }
 
         function startTimer() {
@@ -624,27 +842,31 @@
                 if (timerState.isPaused) return;
                 
                 timerState.timeLeft--;
+                timerState.totalTime++;
                 
-                // 音效触发逻辑
                 handleSounds();
                 
                 if (timerState.timeLeft <= 0) {
                     phaseTransition();
                 }
                 
-                updateTimerDisplay();
+                updateDisplay();
             }, 1000);
         }
 
         function handleSounds() {
             const { phase, timeLeft } = timerState;
             
-            // 回合最后3秒：播放倒计时3声
+            // 10秒警告：板儿鼓3声（精确移植版）
+            if (phase === 'round' && timeLeft === 10) {
+                playBanGu();
+            }
+            
+            // 3秒倒计时：华为Petal
             if (phase === 'round' && timeLeft === 3) {
                 playCountdown3();
             }
             
-            // 休息最后3秒：播放倒计时3声（这就是"准备开始"的信号）
             if (phase === 'rest' && timeLeft === 3) {
                 playCountdown3();
             }
@@ -655,15 +877,13 @@
             
             switch(phase) {
                 case 'prepare':
-                    // 准备结束，开始回合
                     timerState.phase = 'round';
                     timerState.timeLeft = settings.roundTime;
-                    playOpeningGong(); // 手掌锣1声
+                    playOpeningGong();
                     break;
                     
                 case 'round':
-                    // 回合结束
-                    playEndGong(); // 手掌锣2声
+                    playEndGong();
                     
                     if (currentRound >= settings.rounds) {
                         completeWorkout();
@@ -675,38 +895,14 @@
                     break;
                     
                 case 'rest':
-                    // 休息结束，下一回合开始
-                    // 注意：休息最后3秒已经播放了倒计时3声，这里直接进入回合
                     timerState.currentRound++;
                     timerState.phase = 'round';
                     timerState.timeLeft = settings.roundTime;
-                    playOpeningGong(); // 手掌锣1声（开始战斗！）
+                    playOpeningGong();
                     break;
             }
             
-            updateTimerDisplay();
-        }
-
-        function updateTimerDisplay() {
-            const { phase, timeLeft, currentRound } = timerState;
-            
-            const phaseTexts = {
-                prepare: 'GET READY',
-                round: 'ROUND',
-                rest: 'REST'
-            };
-            
-            document.getElementById('phaseText').textContent = phaseTexts[phase];
-            document.getElementById('roundText').textContent = 
-                phase === 'complete' ? '' : `${currentRound} / ${settings.rounds}`;
-            document.getElementById('timerDisplay').textContent = 
-                phase === 'prepare' ? timeLeft : formatTime(timeLeft);
-            
-            const circle = document.getElementById('timerCircle');
-            circle.className = 'timer-circle';
-            if (phase === 'round') circle.classList.add('fight');
-            if (phase === 'rest') circle.classList.add('rest');
-            if (phase === 'prepare') circle.classList.add('prepare');
+            updateDisplay();
         }
 
         function togglePause() {
@@ -714,58 +910,55 @@
             document.getElementById('pauseBtn').textContent = timerState.isPaused ? '▶' : '⏸';
         }
 
-        function stopWorkout() {
-            if (timerState.intervalId) clearInterval(timerState.intervalId);
-            showPage('settingsPage');
+        function resetWorkout() {
+            // 重置当前回合
+            if (timerState.phase === 'round') {
+                timerState.timeLeft = settings.roundTime;
+            } else if (timerState.phase === 'rest') {
+                timerState.timeLeft = settings.restTime;
+            } else {
+                timerState.timeLeft = 3;
+            }
+            updateDisplay();
         }
 
         function completeWorkout() {
-            if (timerState.intervalId) clearInterval(timerState.intervalId);
-            setTimeout(() => {
-                showPage('completePage');
-                playApplause();
-            }, 500);
+            if (timerState.intervalId) {
+                clearInterval(timerState.intervalId);
+                timerState.intervalId = null;
+            }
+            document.getElementById('completeStats').textContent = `共完成 ${settings.rounds} 回合 · 总时长 ${formatTime(timerState.totalTime)}`;
+            document.getElementById('timerPage').classList.remove('active');
+            document.getElementById('completePage').classList.add('active');
         }
 
         function backToSettings() {
-            showPage('settingsPage');
+            // 重置所有状态
+            timerState.currentRound = 1;
+            timerState.phase = 'prepare';
+            timerState.timeLeft = 3;
+            timerState.isPaused = false;
+            timerState.wasPausedBeforeSettings = false;
+            timerState.totalTime = 0;
+            document.getElementById('pauseBtn').textContent = '⏸';
+            
+            switchToSettings();
         }
 
-        function playApplause() {
-            if (!audioCtx) return;
-            const t = audioCtx.currentTime;
-            
-            for (let i = 0; i < 30; i++) {
-                const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.1, audioCtx.sampleRate);
-                const noiseData = noiseBuffer.getChannelData(0);
-                for (let j = 0; j < noiseData.length; j++) {
-                    noiseData[j] = (Math.random() * 2 - 1);
-                }
-                
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = noiseBuffer;
-                
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 1000 + Math.random() * 2000;
-                filter.Q.value = 1;
-                
-                const gain = audioCtx.createGain();
-                const startTime = t + Math.random() * 2;
-                gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(0.3, startTime + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
-                
-                noise.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                noise.start(startTime);
+        function adjustSetting(type, delta) {
+            if (type === 'round') {
+                settings.roundTime = Math.max(10, Math.min(600, settings.roundTime + delta));
+            } else if (type === 'rest') {
+                settings.restTime = Math.max(10, Math.min(300, settings.restTime + delta));
+            } else if (type === 'rounds') {
+                settings.rounds = Math.max(1, Math.min(30, settings.rounds + delta));
             }
+            updateSettingsDisplay();
         }
 
         // 初始化
-        updateSettings();
+        updateDisplay();
+        updateSettingsDisplay();
         document.addEventListener('click', initAudio, { once: true });
     </script>
 </body>
